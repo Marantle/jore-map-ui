@@ -1,5 +1,6 @@
 import { INode, ICoordinate } from '../models';
 import NodeType from '../enums/nodeType';
+import StopFactory from './stopFactory';
 
 class NodeFactory {
     public static createNode = (node: any): INode => {
@@ -9,8 +10,11 @@ class NodeFactory {
             lat: coordinateList.coordinates[1],
         };
 
+        const nodeStop =  node.pysakkiBySoltunnus;
+
         return {
             id: node.soltunnus,
+            stop: nodeStop ? StopFactory.createStop(nodeStop) : undefined,
             type: getNodeType(node.soltyyppi),
             coordinates: coordinate,
         };
