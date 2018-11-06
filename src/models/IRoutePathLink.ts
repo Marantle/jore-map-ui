@@ -3,7 +3,7 @@ export default interface IRoutePathLink {
     positions: [[number, number]];
     startNodeId: string;
     endNodeId: string;
-    orderNumber: number;
+    orderNumber: number | null;
     startNodeType: string;
     timeAlignmentStop: string;
 }

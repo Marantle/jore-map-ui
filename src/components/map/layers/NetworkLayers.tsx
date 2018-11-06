@@ -5,7 +5,7 @@ import NodeService from '~/services/nodeService';
 import { NetworkStore } from '~/stores/networkStore';
 import TransitTypeHelper from '~/util/transitTypeHelper';
 import TransitTypeColorHelper from '~/util/transitTypeColorHelper';
-import { NewRoutePathStore } from '~/stores/new/newRoutePathStore';
+import { RoutePathStore } from '~/stores/routePathStore';
 import NodeType from '~/enums/nodeType';
 import VectorGridLayer from './VectorGridLayer';
 
@@ -26,7 +26,7 @@ enum NodeColors {
 
 interface INetworkLayersProps {
     networkStore?: NetworkStore;
-    newRoutePathStore?: NewRoutePathStore;
+    routePathStore?: RoutePathStore;
 }
 
 function getGeoServerUrl(layerName: string) {
@@ -35,7 +35,7 @@ function getGeoServerUrl(layerName: string) {
     return `${GEOSERVER_URL}/gwc/service/tms/1.0.0/joremapui%3A${layerName}@EPSG%3A900913@pbf/{z}/{x}/{y}.pbf`;
 }
 
-@inject('networkStore', 'newRoutePathStore')
+@inject('networkStore', 'routePathStore')
 @observer
 export default class NetworkLayers extends Component<INetworkLayersProps> {
 
@@ -121,13 +121,14 @@ export default class NetworkLayers extends Component<INetworkLayersProps> {
 
     private addNodeFromInitialClickEvent = (clickEvent: any) => {
         const properties =  clickEvent.sourceTarget.properties;
+        console.log('properties ', properties);
         if (properties.soltyyppi !== NodeType.STOP) return;
 
         // TODO: Use factory call instead of service call because
         // geojson / geojsonManual are not found from properties
         NodeService.fetchNode(properties.soltunnus).then((node) => {
             if (node) {
-                this.props.newRoutePathStore!.addNode({
+                this.props.routePathStore!.addNode({
                     id: node.id,
                     coordinates: node.coordinates,
                 });
@@ -136,8 +137,9 @@ export default class NetworkLayers extends Component<INetworkLayersProps> {
     }
 
     private isWaitingForNewRoutePathFirstNodeClick() {
-        return this.props.newRoutePathStore!.isCreating
-            && this.props.newRoutePathStore!.nodes.length === 0;
+        console.log('isWaiting? ', this.props.routePathStore!.routePath);
+        return this.props.routePathStore!.isCreating
+            && this.props.routePathStore!.routePath.routePathLinks!.length === 0;
     }
 
     render() {

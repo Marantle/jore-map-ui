@@ -35,7 +35,7 @@ class RoutePathFactory {
         const routePath : IRoutePath = {
             routeId,
             positions,
-            routePathLinks: routePathLinkResult ? routePathLinkResult.map(res => res.link) : null,
+            routePathLinks: routePathLinkResult ? routePathLinkResult.map(res => res.link) : [],
             internalId: internalRoutePathId,
             geoJson: suunta.geojson ? JSON.parse(suunta.geojson) : null,
             routePathName: suunta.suunimi,
@@ -62,6 +62,32 @@ class RoutePathFactory {
                     .reduce<INode[]>((flatList, node) => flatList.concat(node.nodes), []),
             ) : null,
         };
+    }
+
+    public static createNewRoutePath(lineId: string, routeId: string): IRoutePath {
+        const routePath: IRoutePath = {
+            lineId,
+            routeId,
+            internalId: '',
+            routePathName: 'Uusi reitinsuunta',
+            routePathNameSw: 'Ny ruttriktning',
+            direction: '1',
+            positions: [[0, 0]], // TODO: remove
+            geoJson: null, // TODO: remove
+            visible: true,
+            startTime: new Date,
+            endTime: new Date,
+            lastModified: new Date,
+            routePathLinks: [],
+            originFi: '',
+            originSw: '',
+            destinationFi: '',
+            destinationSw: '',
+            routePathShortName: '',
+            routePathShortNameSw: '',
+            modifiedBy: '',
+        };
+        return routePath;
     }
 }
 
